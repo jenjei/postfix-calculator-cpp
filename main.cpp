@@ -12,6 +12,7 @@ using std::istringstream;
 
 bool isOperator(const string& input);
 void performOp(const string& input, stack<double>& calculatorStack);
+void performReverseOp(const string& input, stack<double>& calculatorStack);
 
 int main() {
     cout << "Welcome to the PostFix Calculator!" << endl;
@@ -20,7 +21,7 @@ int main() {
     string input;
 
     while(true) {
-        cout << ">>";
+        cout << ">> ";
         cin >> input;
 
         double num;
@@ -30,7 +31,14 @@ int main() {
         else if (isOperator(input)) { // checking if user input was operator + - * /
             performOp(input, calculatorStack); // if input was operator -> calculate!
         }
+        else if (input == "x") {
+            cout << ">> ";
+            cin >> input;
+            isOperator(input);
+            performReverseOp(input, calculatorStack);
+        }
         else if (input == "q") { // checking if user input was "quit"
+            cout << "Quitting PostFix Calculator..." << endl;
             return 0;
         }
         else { // error handling for invalid input
@@ -58,6 +66,32 @@ void performOp(const string& input, stack<double>& calculatorStack) {
     calculatorStack.pop(); // removing value from stack
 
     leftValue = calculatorStack.top();
+    calculatorStack.pop();
+
+    if (input == "-") {
+        result = leftValue - rightValue;
+    }
+    else if (input == "+") {
+        result = leftValue + rightValue;
+    }
+    else if (input == "*") {
+        result = leftValue * rightValue;
+    }
+    else if (input == "/") {
+        result = leftValue / rightValue;
+    }
+
+    cout << "result: " << result << endl;
+    calculatorStack.push(result);
+}
+
+void performReverseOp(const string& input, stack<double>& calculatorStack) {
+    double leftValue, rightValue, result;
+
+    leftValue = calculatorStack.top(); // saving the last stack value to a variable
+    calculatorStack.pop(); // removing value from stack
+
+    rightValue = calculatorStack.top();
     calculatorStack.pop();
 
     if (input == "-") {
