@@ -15,6 +15,8 @@ bool isOperator(const string& input);
 void performOp(const string& input, stack<double>& calculatorStack);
 void performReverseOp(const string& input, stack<double>& calculatorStack);
 void sum(stack<double>& calculatorStack);
+void average(stack<double>& calculatorStack);
+void PrintStack(stack<double> s);
 
 int main() {
     cout << "Welcome to the PostFix Calculator!" << endl;
@@ -28,7 +30,7 @@ int main() {
         cin >> input;
 
         double num;
-        if(istringstream(input) >> num) { // checking if user input was double
+        if (istringstream(input) >> num) { // checking if user input was double
             calculatorStack.push(num);
         }
         else if (isOperator(input)) { // checking if user input was operator + - * /
@@ -43,12 +45,19 @@ int main() {
         else if (input == "s") {
             sum(calculatorStack);
         }
+        else if (input == "a") {
+            average(calculatorStack);
+        }
+        else if (input == "p") {
+            PrintStack(calculatorStack);
+        }
         else if (input == "q") { // checking if user input was "quit"
             cout << "Quitting PostFix Calculator..." << endl;
             return 0;
         }
         else { // error handling for invalid input
-            cout << "invalid input" << endl;
+            cout << "invalid input\n" << endl;
+            instructions();
         }
 
     }
@@ -61,6 +70,7 @@ void instructions() {
         << "x -> for changing the order of operations\n"
         << "s -> for summing up all the values in the stack\n"
         << "a -> for calculating average of all the values in the stack\n"
+        << "p -> for printing the stack\n"
         << "q -> for quit the calculator\n";
 }
 
@@ -88,6 +98,7 @@ double calculate(double right, double left, string input) {
     else if (input == "/") {
         return (left / right);
     }
+    return 0;
 }
 
 void performOp(const string& input, stack<double>& calculatorStack) {
@@ -123,10 +134,39 @@ void performReverseOp(const string& input, stack<double>& calculatorStack) {
 void sum(stack<double>& calculatorStack) {
     // calculate sum here
     double sum;
-    while(!calculatorStack.empty()){
+    while(!calculatorStack.empty()) {
         sum += calculatorStack.top();
         calculatorStack.pop();
     }
     cout << "result: " << sum << endl;
     calculatorStack.push(sum);
+}
+
+void average(stack<double>& calculatorStack) {
+    double sum;
+    int amount = calculatorStack.size();
+    while(!calculatorStack.empty()) {
+        sum += calculatorStack.top();
+        calculatorStack.pop();
+    }
+    double average = sum/amount;
+    cout << "result: " << average << endl;
+    calculatorStack.push(average);
+}
+
+void PrintStack(stack<double> s)
+{
+    // If stack is empty then return
+    if (s.empty()) {
+        return;
+    }
+    int x = s.top();
+ 
+    s.pop();
+ 
+    PrintStack(s);
+ 
+    cout << x << " ";
+
+    s.push(x);
 }

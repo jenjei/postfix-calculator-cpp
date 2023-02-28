@@ -43,7 +43,7 @@ When g++ CLI tools installed, you can type these commands below to compile this 
 - [x] Create a simple PostFix Calculator (+ - / *) -> (e.g. **8 4 /** input would mean same as 8/4) <br/>
 - [x] Exchange order of operations with x command (e.g. **3 5 x -** input would mean same as 5-3)<br/>
 - [x] Add the sum function (command s) to the calculator which calculates the total sum of the numbers in the stack at that moment, then remove the numbers used for the sum from the stack, and finally add the total to the top of the stack. (e.g. **5 2 4 s** input would calculate 5+2+4, and result 11 is the only value left in stack) <br/>
-- [ ] Implement an average function in your calculator (command a) that calculates the average of all the numbers in the stack. The numbers participating in the average calculation are removed from the stack (all) and the result (average value) is saved on the stack. <br/>
+- [x] Implement an average function in your calculator (command a) that calculates the average of all the numbers in the stack. The numbers participating in the average calculation are removed from the stack (all) and the result (average value) is saved on the stack. <br/>
 - [ ] Make a user interface for your calculator similar to the dc program found on Unix/Linux devices, which does not print any prompts, but the program is directly given the desired calculation expression in postfix format and the program prints its value [check this Wikipedia example](http://en.wikipedia.org/wiki/Dc_(computer_program)).
 > Example:
 >
