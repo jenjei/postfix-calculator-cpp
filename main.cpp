@@ -12,11 +12,13 @@ using std::istringstream;
 
 void instructions();
 bool isOperator(const string& input);
+bool ErrorHandling(stack<double>& e, string err);
 void performOp(const string& input, stack<double>& calculatorStack);
 void performReverseOp(const string& input, stack<double>& calculatorStack);
 void sum(stack<double>& calculatorStack);
 void average(stack<double>& calculatorStack);
 void PrintStack(stack<double> s);
+double calculate(double right, double left, string input);
 
 int main() {
     cout << "Welcome to the PostFix Calculator!" << endl;
@@ -30,11 +32,13 @@ int main() {
         cin >> input;
 
         double num;
-        if (istringstream(input) >> num) { // checking if user input was double
+        if (istringstream(input) >> num) { // checking if user input was numeric
             calculatorStack.push(num);
         }
         else if (isOperator(input)) { // checking if user input was operator + - * /
-            performOp(input, calculatorStack); // if input was operator -> calculate!
+            if (!ErrorHandling(calculatorStack, input)) { // checking for errors
+                performOp(input, calculatorStack); // if input was operator -> calculate!
+            }
         }
         else if (input == "x") {
             cout << ">> ";
@@ -43,10 +47,14 @@ int main() {
             performReverseOp(input, calculatorStack);
         }
         else if (input == "s") {
-            sum(calculatorStack);
+            if (!ErrorHandling(calculatorStack, input)) {
+                sum(calculatorStack);
+            }
         }
         else if (input == "a") {
-            average(calculatorStack);
+            if (!ErrorHandling(calculatorStack, input)) {
+                average(calculatorStack);
+            }
         }
         else if (input == "p") {
             PrintStack(calculatorStack);
@@ -86,6 +94,10 @@ bool isOperator(const string& input) { // returning true or false
 }
 
 double calculate(double right, double left, string input) {
+    stack<double> test;
+    test.push(left);
+    test.push(right);
+
     if (input == "-") {
         return (left - right);
     }
@@ -96,7 +108,9 @@ double calculate(double right, double left, string input) {
         return left * right;
     }
     else if (input == "/") {
-        return (left / right);
+        if (!ErrorHandling(test, input)) { // checking if divider is 0
+            return (left / right);
+        }
     }
     return 0;
 }
@@ -110,7 +124,7 @@ void performOp(const string& input, stack<double>& calculatorStack) {
     leftValue = calculatorStack.top();
     calculatorStack.pop();
 
-    calculate(rightValue, leftValue, input);
+    result = (calculate(rightValue, leftValue, input));
 
     cout << "result: " << result << endl;
     calculatorStack.push(result);
@@ -125,7 +139,7 @@ void performReverseOp(const string& input, stack<double>& calculatorStack) {
     rightValue = calculatorStack.top();
     calculatorStack.pop();
 
-    calculate(rightValue, leftValue, input);
+    result = (calculate(rightValue, leftValue, input));
 
     cout << "result: " << result << endl;
     calculatorStack.push(result);
@@ -160,13 +174,39 @@ void PrintStack(stack<double> s)
     if (s.empty()) {
         return;
     }
-    int x = s.top();
- 
-    s.pop();
- 
-    PrintStack(s);
- 
-    cout << x << " ";
 
+    int x = s.top();
+    s.pop();
+    PrintStack(s);
+    cout << x << " ";
     s.push(x);
+}
+
+bool ErrorHandling(stack<double>& stack, string input) { // returns true if any error found
+
+    if (stack.empty() && input == "a") {
+        cout << "Stack is empty. Average is NaN." << endl;
+        return true;
+    }
+    else if (stack.empty())
+    {
+        cout << "Stack is empty. Cannot calculate without any numbers." << endl;
+        return true;
+    }
+    else if (stack.size() == 1 && input == "a") {
+        cout << "Stack has only one value." << endl;
+        return false;
+    }
+    else if (stack.size() <= 1) {
+        cout << "Stack has one or less entries. Cannot calculate." << endl;
+        return true;
+    }
+    else if (stack.top() == 0 && input == "/") {
+        cout << "Cannot divide by zero" << endl;
+        return true;
+    }
+    else {
+        return false;
+    }
+
 }
